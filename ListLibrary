@@ -1,0 +1,107 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UIElements;
+
+public class BerenList<T>
+{
+    private T[] _currentArray;
+    private T _item;
+    private int _currentIndex;
+    private string _info;
+
+    public BerenList()
+    {
+        _currentArray = new T[1];
+        _currentIndex = 0;
+    }
+
+    //Add
+    public void B_Add(T item)
+    {
+        _currentArray[_currentIndex++] = item;
+        T[] temp = new T[_currentArray.Length];
+        Array.Copy(_currentArray, temp, _currentArray.Length); //temp[1] array[1]
+        _currentArray = new T[_currentIndex + 1]; //array[2]
+        Array.Copy(temp, _currentArray, temp.Length);
+    }
+    
+    public T B_GetItem(int index)
+    {
+        return (index - 1 <= 0 || index > _currentArray.Length - 1) ? _currentArray[0] : _currentArray[index];
+    }
+    
+    //RemoveAt
+    public void B_RemoveAt(int start, int end)
+    {
+
+        for (int i = start; i <= end-start; i++)
+        {
+            B_RemoveAtIndex(start);
+        }
+    }
+
+    public void B_RemoveAtIndex(int index)
+    {
+        T[] temp = new T[_currentArray.Length-1];
+        
+        for (int i = 0; i < index; i++)
+        {
+            temp[i] = _currentArray[i];
+        }
+
+        for (int i = index+1; i < _currentArray.Length; i++)
+        {
+            temp[i - 1] = _currentArray[i];
+        }
+
+        _currentArray = new T[_currentArray.Length - 1];
+        Array.Copy(temp,_currentArray,temp.Length);
+        
+    }
+    //Remove The Last Item
+
+    public void B_RemoveLastItem()
+    {
+        T[] temp = new T[_currentArray.Length - 1];
+        for (int i = 0; i < temp.Length; i++)
+        {
+            temp[i] = _currentArray[i];
+        }
+
+        _currentArray = new T[temp.Length];
+        Array.Copy(temp, _currentArray, temp.Length);
+    }
+
+    //Clear The Whole Array
+    public void B_ClearArray()
+    {
+        _currentArray = Array.Empty<T>();
+    }
+    
+   //Return index 
+    public int B_ReturnIndex(T item)
+    {
+        for (int i = 0; i < _currentArray.Length; i++)
+        {
+            if (item.Equals(_currentArray[i]))
+            {
+                return i;
+            }
+        }
+
+        return 0;
+    }
+
+    public override string ToString()
+    {
+        _info = "";
+        foreach (T index in _currentArray)
+        {
+            _info += index + "-";
+        }
+
+        return _info;
+    }
+}
